@@ -1,14 +1,17 @@
 export default class WordGroup {
-    /** @type string */ word
-    /** @type Array */ nextWords = []
-    /** @type number */ count = 1
+    /** @type Array */ wordGroup = []
+    /** @type string */ nextWord
 
-    get flattend() {
-        return this.word + " " + this.nextWords.join(" ")
+    get flattendWordGroup() {
+        return this.wordGroup.length === 1 ? this.wordGroup.join("") : this.wordGroup.join(" ")
     }
 
-    constructor(word, nextWords) {
-        this.word = word
-        this.nextWords = nextWords
+    /**
+     * @param {string} wordGroup
+     * @param {string} nextWord
+     */
+    constructor(wordGroup, nextWord) {
+        this.wordGroup = wordGroup
+        this.nextWord = nextWord
     }
 }

@@ -45,27 +45,26 @@ export default class Sentence {
 
     #removePunctuation(text) {
         // without period
-        return text.replace(/[,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+        return text.replace(/[,\/#!$%^&*;:{}=\-_`~()]/g, "")
     }
 
     /**
      * @param {Array} words 
      */
     #splitTextsToNGroups(words) {
-        // console.log(words)
         // De hond rent in de tuin
         for (let i = words.length - 1; i >= 0; i--) {
             const word = words[i]
-            // console.log(firstWord)
+
             if (i === words.length - 1) {
                 this.LastWord = word
-            } else if (i === 0) {
-                this.firstWord = word
             } else if (i <= words.length - this.n) {
-                // console.log(words[i])
+                if(i === 0) {
+                    this.firstWord = word
+                }
                 this.wordGroups.push(new WordGroup(
                     words.slice(i, i + this.n - 1),
-                    words.slice(i + this.n - 1, i + this.n).map(word => this.#removePeriod(word))
+                    this.#removePeriod(words.slice(i + this.n - 1, i + this.n).join("")) // next word
                 ))
             }
         }
