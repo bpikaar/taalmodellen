@@ -90,6 +90,10 @@ export default class nGram {
 
     #getRandomWordGroup(word) {
         const wordGroups = this.wordGroups.filter(wordGroup => wordGroup.wordGroup[0] === word)
+        if(wordGroups.length === 0) {
+            console.log("No wordgroup found for", word)
+            return this.#selectRandomWord(this.lastWords)
+        }
         const randomWordGroup = this.#selectRandomWordGroup(wordGroups)
         return randomWordGroup.flattendWordGroup
     }

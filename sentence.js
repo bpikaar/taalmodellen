@@ -45,7 +45,7 @@ export default class Sentence {
 
     #removePunctuation(text) {
         // without period
-        return text.replace(/[,\/#!$%^&*;:{}=\-_`~()]/g, "")
+        return text.replace(/[,\/#!?$%^&’‘*;:{}=\-_`~()]/g, "")
     }
 
     /**
