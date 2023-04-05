@@ -24,18 +24,5 @@ const text = "Er was eens een hond genaamd Max. Hij was een grote, pluizige hond
     "\n" +
     "En zo bleef Max zijn dagen doorbrengen onder de oude boom, gelukkig en tevreden in zijn eigen kleine paradijs in de tuin."
 
-const ngram = new nGram(text, 5)
-console.log(ngram.createSentence())
-
-
-
-
-
-
-
-
-
-// const removedPunctuation = removePunctuation(text)
-// const ngram = ngram(removePunctuation, 2)
-
-// console.log(ngram)
+const ngram = new nGram(text, 4)
+console.log(ngram.createText(4))

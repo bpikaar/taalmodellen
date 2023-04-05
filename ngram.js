@@ -42,7 +42,7 @@ export default class nGram {
             sentence = `${wordGroup}`
             currentWordGroup = wordGroup
         }
-        console.log(sentence)
+
         while (!this.#isLastWord(word)) {
             word = this.#selectNextWord(currentWordGroup)
             currentWordGroup = this.#formWordGroup(currentWordGroup, word)
@@ -51,8 +51,16 @@ export default class nGram {
             console.log(this.#isLastWord(word))
             sentence += ` ${word}`
         }
-
+        sentence = this.#replaceFirstLetterToUpper(sentence)
         return sentence + "."
+    }
+
+    createText(numberOfSentences) {
+        let text = ""
+        for (let i = 0; i < numberOfSentences; i++) {
+            text += this.createSentence() + " "
+        }
+        return text.trim()
     }
 
     #selectFirstWord() {
@@ -97,5 +105,9 @@ export default class nGram {
         } else {
             return words.slice(1).join(" ") + " " + word
         }
+    }
+
+    #replaceFirstLetterToUpper(sentence) {
+        return sentence.charAt(0).toUpperCase() + sentence.slice(1)
     }
 }
