@@ -3,19 +3,21 @@ import WordGroup from "./wordgroup.js"
 export default class Sentence {
     /** @type string */ text
     /** @type number */ n
-    /** @type string */ lastWord
+    // TODO: cleanup, not needed anymore
+    // /** @type string */ lastWord
     /** @type WordGroup */ firstWordGroup
     /** @type WordGroup[] */ wordGroups = []
 
-    /**
-     * @param {string} lastword
-     */
-    set LastWord(lastword) {
-        this.lastWord = this.#removePeriod(lastword)
-    }
-    get LastWord() {
-        return this.lastWord
-    }
+    // TODO: cleanup, not needed anymore
+    // /**
+    //  * @param {string} lastword
+    //  */
+    // set LastWord(lastword) {
+    //     this.lastWord = this.#removePeriod(lastword)
+    // }
+    // get LastWord() {
+    //     return this.lastWord
+    // }
 
     /**
      * @param {string} input 
@@ -62,8 +64,14 @@ export default class Sentence {
         for (let i = words.length - 1; i >= 0; i--) {
             const word = words[i]
 
-            if (i === words.length - 1) {
-                this.LastWord = word
+            // TODO: cleanup, not needed anymore
+            // if (i === words.length - 1) {
+            //     console.log("Last Word")
+            //     console.log(word)
+            //     this.LastWord = word
+            // }
+
+            if (i === words.length - this.n + 1) {
                 this.wordGroups.push(new WordGroup(
                     words.slice(i, i + this.n - 1),
                     ".", // end of sentence (this could be replaced by the real punctuation),

@@ -4,7 +4,9 @@ export default class nGram {
 
     /** @type {Sentence[]} */ sentences = []
     /** @type {string[]} */ firstWordGroups = []
-    /** @type {string[]} */ lastWords = []
+
+    // TODO: cleanup, not needed anymore
+    // /** @type {string[]} */ lastWords = []
     /** @type {WordGroup[]} */ wordGroups = []
 
     /**
@@ -20,9 +22,12 @@ export default class nGram {
 
         // let flattendWordGroups = []
 
+
+
         for (const sentence of this.sentences) {
             this.firstWordGroups.push(sentence.firstWordGroup)
-            this.lastWords.push(sentence.lastWord)
+            // TODO: cleanup, not needed anymore
+            // this.lastWords.push(sentence.lastWord)
             this.wordGroups.push(...sentence.wordGroups)
             // flattendWordGroups.push(...sentence.wordGroups.map(wordgroup => wordgroup.flattendWordGroup))
         }
@@ -48,15 +53,15 @@ export default class nGram {
         //     currentWordGroup = wordGroup
         // }
 
-        while (!this.#isLastWord(currentWordGroup.nextWord)) {
+        while (!currentWordGroup.terminal) {
             currentWordGroup = this.#selectNextWordGroup(currentWordGroup)
             console.log("selected word", currentWordGroup.nextWord)
             console.log("currentWordGroup", currentWordGroup)
-            console.log(this.#isLastWord(currentWordGroup.nextWord))
-            sentence += ` ${currentWordGroup.nextWord}`
+            // console.log(this.#isLastWord(currentWordGroup.nextWord))
+            sentence += currentWordGroup.terminal ? currentWordGroup.nextWord : ` ${currentWordGroup.nextWord}`
         }
         sentence = this.#replaceFirstLetterToUpper(sentence)
-        return sentence + "."
+        return sentence
     }
 
     createText(numberOfSentences) {
