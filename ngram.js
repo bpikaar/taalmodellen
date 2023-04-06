@@ -30,12 +30,11 @@ export default class nGram {
 
     createSentence() {
         let sentence = ""
-        let word = this.#selectFirstWords()
+        let currentWordGroup = this.#selectFirstWordGroup()
 
-        console.log(word)
+        console.log(currentWordGroup)
 
-        let currentWordGroup = word
-        sentence += word
+        sentence += currentWordGroup.flattendWordGroup
 
         // TODO: this could fail if selected first wordgroup is also a lastword
 
@@ -49,13 +48,12 @@ export default class nGram {
         //     currentWordGroup = wordGroup
         // }
 
-        while (!this.#isLastWord(word)) {
-            word = this.#selectNextWord(currentWordGroup)
-            currentWordGroup = this.#formWordGroup(currentWordGroup, word)
-            console.log("selected word",word)
-            console.log("currentWordGroup",currentWordGroup)
-            console.log(this.#isLastWord(word))
-            sentence += ` ${word}`
+        while (!this.#isLastWord(currentWordGroup.nextWord)) {
+            currentWordGroup = this.#selectNextWordGroup(currentWordGroup)
+            console.log("selected word", currentWordGroup.nextWord)
+            console.log("currentWordGroup", currentWordGroup)
+            console.log(this.#isLastWord(currentWordGroup.nextWord))
+            sentence += ` ${currentWordGroup.nextWord}`
         }
         sentence = this.#replaceFirstLetterToUpper(sentence)
         return sentence + "."
@@ -69,9 +67,9 @@ export default class nGram {
         return text.trim()
     }
 
-    #selectFirstWords() {
+    #selectFirstWordGroup() {
         // select random first words
-        return this.#selectRandomWordGroup(this.firstWordGroups).flattendWordGroup
+        return this.#selectRandomWordGroup(this.firstWordGroups)
     }
 
     // TODO: cleanup, not needed anymore
@@ -83,15 +81,15 @@ export default class nGram {
         return this.lastWords.includes(word)
     }
 
-    #selectNextWord(currentWordGroup) {
-        // select all wordgroups that start with the current wordGroup
+    #selectNextWordGroup(currentWordGroup) {
+        // select all wordgroups that start with the end of the current wordGroup
         const wordGroups = this.wordGroups.filter(wordGroup => {
-            return wordGroup.flattendWordGroup === currentWordGroup
+            return wordGroup.flattendWordGroup === currentWordGroup.nextFlattendWordGroup
         })
         if(wordGroups.length === 0) {
             console.log("No wordgroup found for", currentWordGroup)
         } else {
-            return this.#selectRandomWordGroup(wordGroups).nextWord
+            return this.#selectRandomWordGroup(wordGroups)
         }
     }
 
@@ -109,15 +107,15 @@ export default class nGram {
     #selectRandomWordGroup(wordGroups) {
         return wordGroups[Math.floor(Math.random() * wordGroups.length)]
     }
-
-    #formWordGroup(currentWordGroup, word) {
-        const words = currentWordGroup.split(" ")
-        if(this.n === 2) {
-            return word
-        } else {
-            return words.slice(1).join(" ") + " " + word
-        }
-    }
+    // TODO: cleanup, not needed anymore
+    // #formWordGroup(currentWordGroup, word) {
+    //     const words = currentWordGroup.split(" ")
+    //     if(this.n === 2) {
+    //         return word
+    //     } else {
+    //         return words.slice(1).join(" ") + " " + word
+    //     }
+    // }
 
     #replaceFirstLetterToUpper(sentence) {
         return sentence.charAt(0).toUpperCase() + sentence.slice(1)

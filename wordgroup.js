@@ -7,6 +7,11 @@ export default class WordGroup {
         return this.wordGroup.length === 1 ? this.wordGroup.join("") : this.wordGroup.join(" ")
     }
 
+    get nextFlattendWordGroup() {
+        return this.wordGroup.length === 1 ? this.nextWord : this.wordGroup.slice(1).join(" ") +
+            ` ${this.nextWord}`
+    }
+
     /**
      * @param {string} wordGroup
      * @param {string} nextWord
