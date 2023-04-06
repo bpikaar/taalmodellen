@@ -3,7 +3,7 @@ import Sentence from "./sentence.js"
 export default class nGram {
 
     /** @type {Sentence[]} */ sentences = []
-    /** @type {string[]} */ firstWords = []
+    /** @type {string[]} */ firstWordGroups = []
     /** @type {string[]} */ lastWords = []
     /** @type {WordGroup[]} */ wordGroups = []
 
@@ -15,13 +15,13 @@ export default class nGram {
         this.n = n
         // splits text into sentences
         this.sentences = text.split(".")
-            .filter(text => text !== "") // remove empty sentences
             .map(sentence => new Sentence(sentence.trim(), n)) // create sentence objects
+            .filter(sentence => sentence.text !== "") // remove empty sentences (+ sentences that have emptied themselves)
 
         // let flattendWordGroups = []
 
         for (const sentence of this.sentences) {
-            this.firstWords.push(sentence.firstWord)
+            this.firstWordGroups.push(sentence.firstWordGroup)
             this.lastWords.push(sentence.lastWord)
             this.wordGroups.push(...sentence.wordGroups)
             // flattendWordGroups.push(...sentence.wordGroups.map(wordgroup => wordgroup.flattendWordGroup))
@@ -30,18 +30,24 @@ export default class nGram {
 
     createSentence() {
         let sentence = ""
-        let word = this.#selectFirstWord()
+        let word = this.#selectFirstWords()
+
+        console.log(word)
+
         let currentWordGroup = word
         sentence += word
 
-        // select wordGroup if n > 1
-        if (this.n > 2) {
-            // select random wordgroup
-            let wordGroup = this.#getRandomWordGroup(word)
-            console.log("Wordgroup", wordGroup)
-            sentence = `${wordGroup}`
-            currentWordGroup = wordGroup
-        }
+        // TODO: this could fail if selected first wordgroup is also a lastword
+
+        // TODO: cleanup, not needed anymore
+        // // select wordGroup if n > 1
+        // if (this.n > 2) {
+        //     // select random wordgroup
+        //     let wordGroup = this.#getRandomWordGroup(word)
+        //     console.log("Wordgroup", wordGroup)
+        //     sentence = `${wordGroup}`
+        //     currentWordGroup = wordGroup
+        // }
 
         while (!this.#isLastWord(word)) {
             word = this.#selectNextWord(currentWordGroup)
@@ -63,14 +69,15 @@ export default class nGram {
         return text.trim()
     }
 
-    #selectFirstWord() {
-        // select random first word
-        return this.#selectRandomWord(this.firstWords)
+    #selectFirstWords() {
+        // select random first words
+        return this.#selectRandomWordGroup(this.firstWordGroups).flattendWordGroup
     }
 
-    #selectRandomWord(words) {
-        return words[Math.floor(Math.random() * words.length)]
-    }
+    // TODO: cleanup, not needed anymore
+    // #selectRandomWord(words) {
+    //     return words[Math.floor(Math.random() * words.length)]
+    // }
 
     #isLastWord(word) {
         return this.lastWords.includes(word)
@@ -88,15 +95,16 @@ export default class nGram {
         }
     }
 
-    #getRandomWordGroup(word) {
-        const wordGroups = this.wordGroups.filter(wordGroup => wordGroup.wordGroup[0] === word)
-        if(wordGroups.length === 0) {
-            console.log("No wordgroup found for", word)
-            return this.#selectRandomWord(this.lastWords)
-        }
-        const randomWordGroup = this.#selectRandomWordGroup(wordGroups)
-        return randomWordGroup.flattendWordGroup
-    }
+    // TODO: cleanup, not needed anymore
+    // #getRandomWordGroup(word) {
+    //     const wordGroups = this.wordGroups.filter(wordGroup => wordGroup.wordGroup[0] === word)
+    //     if(wordGroups.length === 0) {
+    //         console.log("No wordgroup found for", word)
+    //         return this.#selectRandomWord(this.lastWords)
+    //     }
+    //     const randomWordGroup = this.#selectRandomWordGroup(wordGroups)
+    //     return randomWordGroup.flattendWordGroup
+    // }
 
     #selectRandomWordGroup(wordGroups) {
         return wordGroups[Math.floor(Math.random() * wordGroups.length)]

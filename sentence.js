@@ -4,7 +4,7 @@ export default class Sentence {
     /** @type string */ text
     /** @type number */ n
     /** @type string */ lastWord
-    /** @type string */ firstWord
+    /** @type WordGroup */ firstWordGroup
     /** @type WordGroup[] */ wordGroups = []
 
     /**
@@ -31,7 +31,13 @@ export default class Sentence {
     run() {
         this.text = this.#removePunctuation(this.text)
         const words = this.#textToArray(this.text)
-        this.#splitTextsToNGroups(words)
+
+        // Destroy sentence if length is smaller than n, because we cannot make n-grams from it
+        if (words.length < this.n) {
+            this.text = ""
+        } else {
+            this.#splitTextsToNGroups(words)
+        }
         // console.log(this.wordGroups)
     }
 
@@ -59,13 +65,14 @@ export default class Sentence {
             if (i === words.length - 1) {
                 this.LastWord = word
             } else if (i <= words.length - this.n) {
-                if(i === 0) {
-                    this.firstWord = word
-                }
-                this.wordGroups.push(new WordGroup(
+                const newWordgroup = new WordGroup(
                     words.slice(i, i + this.n - 1),
                     this.#removePeriod(words.slice(i + this.n - 1, i + this.n).join("")) // next word
-                ))
+                )
+                this.wordGroups.push(newWordgroup)
+                if(i === 0) {
+                    this.firstWordGroup = newWordgroup
+                }
             }
         }
         console.log(this.wordGroups)
