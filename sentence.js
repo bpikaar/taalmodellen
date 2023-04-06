@@ -64,6 +64,11 @@ export default class Sentence {
 
             if (i === words.length - 1) {
                 this.LastWord = word
+                this.wordGroups.push(new WordGroup(
+                    words.slice(i, i + this.n - 1),
+                    ".", // end of sentence (this could be replaced by the real punctuation),
+                    true
+                ))
             } else if (i <= words.length - this.n) {
                 const newWordgroup = new WordGroup(
                     words.slice(i, i + this.n - 1),
