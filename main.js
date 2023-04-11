@@ -2,37 +2,23 @@
 
 // import ngram from "./ngram"
 import nGram from "./ngram.js"
-import * as http from 'http'
-import * as https from 'https';
+import Data from "./data.js"
+import readline from "readline"
 
-// get data from url and return as string
-function getScript(url) {
-    return new Promise((resolve, reject) => {
+function waitForInput(query) {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
 
-        let client = url.toString().indexOf("https") === 0 ? https : http;
-
-        client.get(url, (resp) => {
-            let data = ''
-
-            // A chunk of data has been recieved.
-            resp.on('data', (chunk) => {
-                data += chunk
-            })
-
-            // The whole response has been received. Print out the result.
-            resp.on('end', () => {
-                resolve(data)
-            })
-
-        }).on("error", (err) => {
-            reject(err)
-        })
-    })
+    return new Promise(resolve => rl.question(query, ans => {
+        rl.close();
+        resolve(ans);
+    }))
 }
 
 // const text = "De hond rent in de tuin. In de tuin staat een boom."
 // const text = "De hond rent in de tuin."
-
 // const text = "Er was eens een hond genaamd Max. Hij was een grote, pluizige hond met een gouden vacht en trouwe, bruine ogen. Max woonde in een prachtig huis met zijn baasje, Anna. Anna hield van Max en hij hield van haar, maar hij was vooral dol op de grote tuin achter het huis.\n" +
 //     "\n" +
 //     "Max hield ervan om te rennen en te spelen in de tuin. Hij had zijn eigen kleine speeltuin, gevuld met ballen, frisbees en andere speeltjes. Maar er was één plek in de tuin waar Max het allerliefst kwam: de grote, oude boom aan de rand van de tuin.\n" +
@@ -51,12 +37,22 @@ function getScript(url) {
 //     "\n" +
 //     "En zo bleef Max zijn dagen doorbrengen onder de oude boom, gelukkig en tevreden in zijn eigen kleine paradijs in de tuin."
 async function main() {
-    // const text = await getScript("https://www.gutenberg.org/cache/epub/58329/pg58329.txt")
-    const text = await getScript("https://www.dbnl.org/nieuws/text.php?id=maan003taal01")
-    const ngram = new nGram(text, 4)
-    console.log(ngram.createText(4))
+    const text = await Data.getTextFromUrl("https://www.dbnl.org/nieuws/text.php?id=maan003taal01")
+    const ngram = new nGram(text, 5)
+    next(ngram)
 }
 
+async function next(ngram) {
+    console.log(ngram.createText(4))
+    const input = await waitForInput("Press enter for next sentence and Q to quit...")
+    if (input.toLowerCase() === "q") {
+        process.exit()
+    }
+    // check if enter was pressed
+    else if (input === "") {
+        next(ngram)
+    }
+}
 main()
 
 
