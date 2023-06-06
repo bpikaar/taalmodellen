@@ -7,9 +7,14 @@ export default class WordGroup {
         return this.wordGroup.length === 1 ? this.wordGroup.join("") : this.wordGroup.join(" ")
     }
 
+    /**
+     * Gets the next wordgroup as a string (without first word, with next word)
+     * @returns {string}
+     */
     get nextFlattendWordGroup() {
-        return this.wordGroup.length === 1 ? this.nextWord : this.wordGroup.slice(1).join(" ") +
-            ` ${this.nextWord}`
+        return this.wordGroup.length === 1 ?
+            this.nextWord :
+            this.wordGroup.slice(1).join(" ") + " " + this.nextWord
     }
 
     /**

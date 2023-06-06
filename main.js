@@ -54,5 +54,3 @@ async function next(ngram) {
     }
 }
 main()
-
-

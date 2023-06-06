@@ -3,21 +3,8 @@ import WordGroup from "./wordgroup.js"
 export default class Sentence {
     /** @type string */ text
     /** @type number */ n
-    // TODO: cleanup, not needed anymore
-    // /** @type string */ lastWord
     /** @type WordGroup */ firstWordGroup
     /** @type WordGroup[] */ wordGroups = []
-
-    // TODO: cleanup, not needed anymore
-    // /**
-    //  * @param {string} lastword
-    //  */
-    // set LastWord(lastword) {
-    //     this.lastWord = this.#removePeriod(lastword)
-    // }
-    // get LastWord() {
-    //     return this.lastWord
-    // }
 
     /**
      * @param {string} input 
@@ -31,7 +18,7 @@ export default class Sentence {
     }
 
     run() {
-        this.text = this.#removePunctuation(this.text)
+        this.text = this.#removePunctuation(this.text) // remove punctuation except period
         const words = this.#textToArray(this.text)
 
         // Destroy sentence if length is smaller than n, because we cannot make n-grams from it
@@ -40,7 +27,6 @@ export default class Sentence {
         } else {
             this.#splitTextsToNGroups(words)
         }
-        // console.log(this.wordGroups)
     }
 
     /**
@@ -60,17 +46,11 @@ export default class Sentence {
      * @param {Array} words 
      */
     #splitTextsToNGroups(words) {
-        // De hond rent in de tuin
+
         for (let i = words.length - 1; i >= 0; i--) {
             const word = words[i]
 
-            // TODO: cleanup, not needed anymore
-            // if (i === words.length - 1) {
-            //     console.log("Last Word")
-            //     console.log(word)
-            //     this.LastWord = word
-            // }
-
+            // if last wordgroup, last word is a period
             if (i === words.length - this.n + 1) {
                 this.wordGroups.push(new WordGroup(
                     words.slice(i, i + this.n - 1),
@@ -80,7 +60,7 @@ export default class Sentence {
             } else if (i <= words.length - this.n) {
                 const newWordgroup = new WordGroup(
                     words.slice(i, i + this.n - 1),
-                    this.#removePeriod(words.slice(i + this.n - 1, i + this.n).join("")) // next word
+                    words.slice(i + this.n - 1, i + this.n).join("") // next word
                 )
                 this.wordGroups.push(newWordgroup)
                 if(i === 0) {
@@ -89,13 +69,5 @@ export default class Sentence {
             }
         }
         console.log(this.wordGroups)
-    }
-
-    /**
-     * 
-     * @param {string} word 
-     */
-    #removePeriod(word) {
-        return word.replace(/\./g, "")
     }
 }
